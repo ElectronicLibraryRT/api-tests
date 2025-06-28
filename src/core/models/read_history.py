@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
-    relationship
+    relationship,
 )
 
 from src.core.models.base import Base
@@ -27,6 +27,7 @@ class ReadHistory(Base):
         back_populates='read_history',
         overlaps="read_books"
     )
+
     user: Mapped['User'] = relationship(
         back_populates='read_history',
         overlaps="favourited_by"

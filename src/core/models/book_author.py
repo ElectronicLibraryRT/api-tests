@@ -1,10 +1,11 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import (
     Mapped,
-    mapped_column
+    mapped_column,
 )
 
 from src.core.models.base import Base
+
 
 class BookAuthor(Base):
     __tablename__ = 'books_authors'

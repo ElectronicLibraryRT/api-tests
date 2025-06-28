@@ -2,7 +2,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
-    relationship
+    relationship,
 )
 
 from src.core.models.base import Base
@@ -16,7 +16,6 @@ class User(Base):
     salt: Mapped[str] = mapped_column(String(32))
     password_hash: Mapped[str] = mapped_column(String(512))
     refresh_token_uuid: Mapped[str] = mapped_column(String(32))
-
 
     read_history: Mapped[list['ReadHistory']] = relationship(
         back_populates='user',

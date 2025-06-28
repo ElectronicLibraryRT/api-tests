@@ -1,7 +1,8 @@
 from sqlalchemy import String
 from sqlalchemy.orm import (
     Mapped,
-    mapped_column, relationship
+    mapped_column,
+    relationship,
 )
 
 from src.core.models.base import Base
