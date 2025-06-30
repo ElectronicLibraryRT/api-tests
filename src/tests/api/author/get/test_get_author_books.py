@@ -1,37 +1,40 @@
 import pytest
 import requests
 from src.core.models import Author, Book
-from src.core.session import session_maker
+from src.core.models.base import Base
+from src.core.session import session_maker, engine
 
-BASE_URL = "http://elibrary.ddns.net"
+BASE_URL = "http://elibrary.ddns.net:8080"
 
 
 @pytest.fixture(scope="module", autouse=True)
 def init_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with session_maker() as session:
         authors = [
             Author(
                 id=1,
                 name="Федор Достоевский",
                 books=[
-                    Book(id=1, title="Преступление и наказание", publication_date="1866"),
-                    Book(id=2, title="Игрок", publication_date="1866"),
-                    Book(id=3, title="Идиот", publication_date="1869")
+                    Book(id=1, title="Преступление и наказание", publication_date="1866-01-01"),
+                    Book(id=2, title="Игрок", publication_date="1866-01-01"),
+                    Book(id=3, title="Идиот", publication_date="1869-01-01")
                 ]
             ),
             Author(
                 id=2,
                 name="Лев Толстой",
                 books=[
-                    Book(id=4, title="Война и мир", publication_date="1869"),
-                    Book(id=5, title="Анна Каренина", publication_date="1877")
+                    Book(id=4, title="Война и мир", publication_date="1869-01-01"),
+                    Book(id=5, title="Анна Каренина", publication_date="1877-01-01")
                 ]
             ),
             Author(
                 id=3,
                 name="Антон Чехов",
                 books=[
-                    Book(id=6, title="Вишневый сад", publication_date="1904")
+                    Book(id=6, title="Вишневый сад", publication_date="1904-01-01")
                 ]
             ),
             Author(
