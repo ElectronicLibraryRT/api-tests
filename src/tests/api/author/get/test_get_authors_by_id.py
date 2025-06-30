@@ -1,13 +1,16 @@
 import pytest
 import requests
 from src.core.models import Author, Book
-from src.core.session import session_maker
+from src.core.models.base import Base
+from src.core.session import session_maker, engine
 
-BASE_URL = "http://elibrary.ddns.net"
+BASE_URL = "http://elibrary.ddns.net:8080"
 
 
 @pytest.fixture(scope="module", autouse=True)
 def init_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with session_maker() as session:
         authors = [
             Author(
@@ -17,21 +20,22 @@ def init_db():
                     Book(
                         id=1,
                         title="Преступление и наказание",
-                        publication_date="1866"
+                        publication_date="1866-01-01"
                     ),
                     Book(
                         id=2,
                         title="Игрок",
-                        publication_date="1866"
+                        publication_date="1866-01-01"
                     )
                 ]
             ),
-            Author(name="Габриэль Гарсиа Маркес"),
-            Author(name="Харуки Мураками"),
-            Author(name="Джейн Остин"),
+            Author(id=2, name="Габриэль Гарсиа Маркес"),
+            Author(id=3, name="Харуки Мураками"),
+            Author(id=4, name="Джейн Остин"),
         ]
 
-        session.add(authors)
+        for author in authors:
+            session.add(author)
         session.commit()
 
 
@@ -43,7 +47,6 @@ def init_db():
         (3, 200, "Харуки Мураками"),
         (4, 200, "Джейн Остин"),
         (999, 404, None),
-
     ]
 )
 def test_get_authors_by_id(author_id: int, expected_status: int, expected_result: str | None):
