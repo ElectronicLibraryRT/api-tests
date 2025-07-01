@@ -3,8 +3,9 @@ import requests
 from src.core.models import Author, Book
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
+from src.settings import DATABASE_URL
 
-BASE_URL = "http://elibrary.ddns.net:8080"
+BASE_URL = DATABASE_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
