@@ -2,8 +2,9 @@ import pytest
 import requests
 from src.core.models import Book, Author, Genre
 from src.core.session import session_maker
+from src.settings import DATABASE_URL
 
-BASE_URL = "http://elibrary.ddns.net"
+BASE_URL = DATABASE_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
