@@ -3,7 +3,7 @@ import requests
 from src.core.models import Author, Book
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
-from src.settings import DATABASE_URL
+from src.settings import BACKEND_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -61,7 +61,7 @@ def init_db():
     ]
 )
 def test_get_authors(params, expected_result: list[str]):
-    url = f"{DATABASE_URL}/authors"
+    url = f"{BACKEND_URL}/authors"
     response = requests.get(url, params=params)
 
     assert response.status_code == 200
