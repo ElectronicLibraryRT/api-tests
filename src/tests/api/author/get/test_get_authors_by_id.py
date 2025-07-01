@@ -5,8 +5,6 @@ from src.core.models.base import Base
 from src.core.session import session_maker, engine
 from src.settings import DATABASE_URL
 
-BASE_URL = DATABASE_URL
-
 
 @pytest.fixture(scope="module", autouse=True)
 def init_db():
@@ -51,7 +49,7 @@ def init_db():
     ]
 )
 def test_get_authors_by_id(author_id: int, expected_status: int, expected_result: str | None):
-    url = f"{BASE_URL}/authors/{author_id}"
+    url = f"{DATABASE_URL}/authors/{author_id}"
     response = requests.get(url)
 
     assert response.status_code == expected_status
