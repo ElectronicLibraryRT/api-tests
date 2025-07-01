@@ -1,7 +1,8 @@
 import pytest
 import requests
 from src.core.models import Book
-from src.core.session import session_maker
+from src.core.models.base import Base
+from src.core.session import session_maker, engine
 from src.settings import DATABASE_URL
 
 BASE_URL = DATABASE_URL
@@ -9,6 +10,8 @@ BASE_URL = DATABASE_URL
 
 @pytest.fixture(scope="module", autouse=True)
 def init_books_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with session_maker() as session:
         books = [
             Book(id=1, title="Преступление и наказание", publication_date="1866"),
