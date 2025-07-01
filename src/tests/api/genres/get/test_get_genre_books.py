@@ -1,13 +1,17 @@
 import pytest
 import requests
 from src.core.models import Genre, Book
-from src.core.session import session_maker
+from src.core.models.base import Base
+from src.core.session import session_maker, engine
+from src.settings import DATABASE_URL
 
-BASE_URL = "http://elibrary.ddns.net"
+BASE_URL = DATABASE_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
 def init_genre_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with session_maker() as session:
         genres = [
             Genre(
