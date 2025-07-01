@@ -96,6 +96,7 @@ enable=
 # --disable=W"
 
 disable=
+    duplicate-code,
     attribute-defined-outside-init,
     invalid-name,
     missing-docstring,
