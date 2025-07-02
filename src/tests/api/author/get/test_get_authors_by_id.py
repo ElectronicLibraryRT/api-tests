@@ -19,12 +19,12 @@ def init_db():
                     Book(
                         id=1,
                         title="Преступление и наказание",
-                        year_written="1866-01-01"
+                        year_written=1866
                     ),
                     Book(
                         id=2,
                         title="Игрок",
-                        year_written="1866-01-01"
+                        year_written=1866
                     )
                 ]
             ),
