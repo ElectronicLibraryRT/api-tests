@@ -18,7 +18,7 @@ class Book(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(128))
-    year_written: Mapped[SmallInteger | None]
+    year_written: Mapped[int | None] = mapped_column(SmallInteger)
 
     authors: Mapped[list['Author']] = relationship(
         secondary='books_authors',
@@ -67,5 +67,5 @@ class Book(Base):
     )
 
     __table_args__ = (
-        UniqueConstraint('title', 'publication_date', name='books_ak_1'),
+        UniqueConstraint('title', 'year_written', name='books_ak_1'),
     )
