@@ -16,24 +16,24 @@ def init_db():
                 id=1,
                 name="Федор Достоевский",
                 books=[
-                    Book(id=1, title="Преступление и наказание", publication_date=1866),
-                    Book(id=2, title="Игрок", publication_date=1866),
-                    Book(id=3, title="Идиот", publication_date=1869)
+                    Book(id=1, title="Преступление и наказание", year_written=1866),
+                    Book(id=2, title="Игрок", year_written=1866),
+                    Book(id=3, title="Идиот", year_written=1869)
                 ]
             ),
             Author(
                 id=2,
                 name="Лев Толстой",
                 books=[
-                    Book(id=4, title="Война и мир", publication_date=1869),
-                    Book(id=5, title="Анна Каренина", publication_date=1877)
+                    Book(id=4, title="Война и мир", year_written=1869),
+                    Book(id=5, title="Анна Каренина", year_written=1877)
                 ]
             ),
             Author(
                 id=3,
                 name="Антон Чехов",
                 books=[
-                    Book(id=6, title="Вишневый сад", publication_date=1904)
+                    Book(id=6, title="Вишневый сад", year_written=1904)
                 ]
             ),
             Author(
