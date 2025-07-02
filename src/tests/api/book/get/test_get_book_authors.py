@@ -1,11 +1,9 @@
 import pytest
 import requests
-from src.core.models import Book, Author
+from src.core.models import Book, Author, Extension, Genre
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
-from src.settings import DATABASE_URL
-
-BASE_URL = DATABASE_URL
+from src.settings import BACKEND_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -17,29 +15,37 @@ def init_books_db():
             Book(
                 id=1,
                 title="Преступление и наказание",
-                publication_date="1866",
-                authors=[Author(id=1, name="Федор Достоевский")]
+                year_written="1866",
+                authors=[Author(id=1, name="Федор Достоевский")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
             ),
             Book(
                 id=2,
                 title="Игрок",
-                publication_date="1866",
-                authors=[Author(id=1, name="Федор Достоевский")]
+                year_written="1866",
+                authors=[Author(id=1, name="Федор Достоевский")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
             ),
             Book(
                 id=3,
                 title="Война и мир",
-                publication_date="1869",
-                authors=[Author(id=1, name="Лев Толстой")]
+                year_written="1869",
+                authors=[Author(id=2, name="Лев Толстой")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
             ),
             Book(
                 id=4,
                 title="Талисман",
-                publication_date="2005",
+                year_written="2005",
                 authors=[
-                    Author(id=2, name="Стивен Кинг"),
-                    Author(id=3, name="Питер Страуб"),
-                ]
+                    Author(id=3, name="Стивен Кинг"),
+                    Author(id=4, name="Питер Страуб"),
+                ],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
             ),
         ]
         session.add_all(books)
@@ -51,11 +57,11 @@ def init_books_db():
     [
         (1, ["Федор Достоевский"]),
         (4, ["Стивен Кинг", "Питер Страуб"]),
-        (2, ["Лев Толстой"]),
+        (3, ["Лев Толстой"]),
     ]
 )
 def test_get_book_authors(book_id: int, expected_result: list[str]):
-    url = f"{BASE_URL}/books/{book_id}/authors"
+    url = f"{BACKEND_URL}/books/{book_id}/authors"
     response = requests.get(url)
 
     assert response.status_code == 200

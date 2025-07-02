@@ -3,8 +3,7 @@ import requests
 from src.core.models import Book, Extension, Author, Genre
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
-
-BASE_URL = "http://elibrary.ddns.net:8080"
+from src.settings import BACKEND_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -16,7 +15,7 @@ def init_book_extensions_db():
             Book(
                 id=1,
                 title="Преступление и наказание",
-                publication_date="1866",
+                year_written="1866",
                 authors=[Author(id=1, name="Федор Достоевский")],
                 genres=[
                     Genre(id=1, name="Драма"),
@@ -30,7 +29,7 @@ def init_book_extensions_db():
             Book(
                 id=2,
                 title="Талисман",
-                publication_date="2005",
+                year_written="2005",
                 authors=[
                     Author(id=2, name="Стивен Кинг"),
                     Author(id=3, name="Питер Страуб"),
@@ -44,8 +43,8 @@ def init_book_extensions_db():
             Book(
                 id=3,
                 title="Война и мир",
-                publication_date="1869",
-                authors=[Author(id=1, name="Лев Толстой")],
+                year_written="1869",
+                authors=[Author(id=4, name="Лев Толстой")],
                 genres=[Genre(id=3, name="Роман")],
                 extensions=[Extension(id=2, name="fb2")]
             ),
@@ -63,7 +62,7 @@ def init_book_extensions_db():
     ]
 )
 def test_get_book_extensions(book_id: int, expected_result: list[str]):
-    url = f"{BASE_URL}/books/{book_id}/extensions"
+    url = f"{BACKEND_URL}/books/{book_id}/extensions"
     response = requests.get(url)
 
     assert response.status_code == 200

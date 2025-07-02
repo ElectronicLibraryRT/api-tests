@@ -1,11 +1,10 @@
 import pytest
 import requests
-from src.core.models import Book
+from src.core.models import Book, Author, Genre, Extension
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
-from src.settings import DATABASE_URL
+from src.settings import BACKEND_URL
 
-BASE_URL = DATABASE_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -14,12 +13,54 @@ def init_books_db():
     Base.metadata.create_all(engine)
     with session_maker() as session:
         books = [
-            Book(id=1, title="Преступление и наказание", publication_date="1866"),
-            Book(id=2, title="Игрок", publication_date="1866"),
-            Book(id=3, title="Идиот", publication_date="1869"),
-            Book(id=4, title="Анна Каренина", publication_date="1877"),
-            Book(id=5, title="Война и мир", publication_date="1869"),
-            Book(id=6, title="Вишневый сад", publication_date="1904")
+            Book(
+                id=1,
+                title="Преступление и наказание",
+                year_written="1866",
+                authors=[Author(id=1, name="Федор Достоевский")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
+            ),
+            Book(
+                id=2,
+                title="Игрок",
+                year_written="1866",
+                authors=[Author(id=1, name="Федор Достоевский")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
+            ),
+            Book(
+                id=3,
+                title="Идиот",
+                year_written="1869",
+                authors=[Author(id=1, name="Федор Достоевский")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
+            ),
+            Book(
+                id=4,
+                title="Анна Каренина",
+                year_written="1877",
+                authors=[Author(id=2, name="Лев Толстой")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
+            ),
+            Book(
+                id=5,
+                title="Война и мир",
+                year_written="1869",
+                authors=[Author(id=2, name="Лев Толстой")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
+            ),
+            Book(
+                id=6,
+                title="Вишневый сад",
+                year_written="1904",
+                authors=[Author(id=3, name="Антон Чехов")],
+                genres=[Genre(id=1, name="No matter")],
+                extensions=[Extension(id=1, name="fb2")],
+            )
         ]
         session.add_all(books)
         session.commit()
@@ -38,7 +79,7 @@ def init_books_db():
     ]
 )
 def test_get_books(params, expected_titles):
-    url = f"{BASE_URL}/books"
+    url = f"{BACKEND_URL}/books"
     response = requests.get(url, params=params)
 
     assert response.status_code == 200
