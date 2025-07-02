@@ -3,9 +3,7 @@ import requests
 from src.core.models import Genre, Book
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
-from src.settings import DATABASE_URL
-
-BASE_URL = DATABASE_URL
+from src.settings import BACKEND_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -18,24 +16,24 @@ def init_genre_db():
                 id=1,
                 name="Классика",
                 books=[
-                    Book(id=1, title="Преступление и наказание", publication_date="1866"),
-                    Book(id=2, title="Игрок", publication_date="1866"),
-                    Book(id=3, title="Идиот", publication_date="1869")
+                    Book(id=1, title="Преступление и наказание", year_wriiten="1866"),
+                    Book(id=2, title="Игрок", year_wriiten="1866"),
+                    Book(id=3, title="Идиот", year_wriiten="1869")
                 ]
             ),
             Genre(
                 id=2,
                 name="Роман",
                 books=[
-                    Book(id=4, title="Анна Каренина", publication_date="1877"),
-                    Book(id=5, title="Война и мир", publication_date="1869")
+                    Book(id=4, title="Анна Каренина", year_wriiten="1877"),
+                    Book(id=5, title="Война и мир", year_wriiten="1869")
                 ]
             ),
             Genre(
                 id=3,
                 name="Драма",
                 books=[
-                    Book(id=6, title="Вишневый сад", publication_date="1904")
+                    Book(id=6, title="Вишневый сад", year_wriiten="1904")
                 ]
             ),
             Genre(
@@ -70,7 +68,7 @@ def init_genre_db():
     ]
 )
 def test_get_genre_books(genre_id: int, params, expected_result: list[str]):
-    url = f"{BASE_URL}/genres/{genre_id}/books"
+    url = f"{BACKEND_URL}/genres/{genre_id}/books"
     response = requests.get(url, params=params)
 
     assert response.status_code == 200
