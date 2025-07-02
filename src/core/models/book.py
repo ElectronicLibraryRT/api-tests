@@ -1,8 +1,7 @@
-from datetime import date
-
 from sqlalchemy import (
     String,
     UniqueConstraint,
+    SmallInteger,
 )
 from sqlalchemy.orm import (
     Mapped,
@@ -19,7 +18,7 @@ class Book(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(128))
-    publication_date: Mapped[date | None]
+    year_written: Mapped[SmallInteger | None]
 
     authors: Mapped[list['Author']] = relationship(
         secondary='books_authors',
