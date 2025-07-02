@@ -16,24 +16,24 @@ def init_genre_db():
                 id=1,
                 name="Классика",
                 books=[
-                    Book(id=1, title="Преступление и наказание", year_wriiten="1866"),
-                    Book(id=2, title="Игрок", year_wriiten="1866"),
-                    Book(id=3, title="Идиот", year_wriiten="1869")
+                    Book(id=1, title="Преступление и наказание", year_written="1866"),
+                    Book(id=2, title="Игрок", year_written="1866"),
+                    Book(id=3, title="Идиот", year_written="1869")
                 ]
             ),
             Genre(
                 id=2,
                 name="Роман",
                 books=[
-                    Book(id=4, title="Анна Каренина", year_wriiten="1877"),
-                    Book(id=5, title="Война и мир", year_wriiten="1869")
+                    Book(id=4, title="Анна Каренина", year_written="1877"),
+                    Book(id=5, title="Война и мир", year_written="1869")
                 ]
             ),
             Genre(
                 id=3,
                 name="Драма",
                 books=[
-                    Book(id=6, title="Вишневый сад", year_wriiten="1904")
+                    Book(id=6, title="Вишневый сад", year_written="1904")
                 ]
             ),
             Genre(
