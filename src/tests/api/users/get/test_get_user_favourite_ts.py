@@ -121,4 +121,4 @@ def test_get_read_timestamp(user_id: int, book_id: int, expected_status: int, ex
 
     if expected_status == 200:
         data = response.json()
-        assert data["added_ts"] == expected_status
+        assert data["added_ts"] == expected_ts
