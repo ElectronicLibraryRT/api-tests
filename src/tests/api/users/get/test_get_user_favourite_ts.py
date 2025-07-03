@@ -45,8 +45,8 @@ def init_users_db():
                 password_hash="hash1",
                 refresh_token_uuid="uuid1",
                 favourite_books=[
-                    FavouriteBook(book=book1, added_ts="2025-07-02 10:23:54"),
-                    FavouriteBook(book=book2, added_ts="2025-03-02 10:23:54"),
+                    FavouriteBook(book=book1, added_ts="2025-07-02 10:23:54+03"),
+                    FavouriteBook(book=book2, added_ts="2025-03-02 10:23:54+03"),
                 ]
             ),
             User(
@@ -56,7 +56,7 @@ def init_users_db():
                 password_hash="hash2",
                 refresh_token_uuid="uuid2",
                 favourite_books=[
-                    FavouriteBook(book=book2, added_ts="2025-06-02 10:23:54")
+                    FavouriteBook(book=book2, added_ts="2025-06-02 10:23:54+03")
                 ]
             ),
             User(
@@ -66,7 +66,7 @@ def init_users_db():
                 password_hash="hash3",
                 refresh_token_uuid="uuid3",
                 favourite_books=[
-                    FavouriteBook(book=book1, added_ts="2025-05-02 10:23:54")
+                    FavouriteBook(book=book1, added_ts="2025-05-02 10:23:54+03")
                 ]
             ),
             User(
@@ -76,7 +76,7 @@ def init_users_db():
                 password_hash="hash4",
                 refresh_token_uuid="uuid4",
                 favourite_books=[
-                    FavouriteBook(book=book3, added_ts="2025-01-02 10:23:54")
+                    FavouriteBook(book=book3, added_ts="2025-01-02 10:23:54+03")
                 ]
             )
         ]
@@ -88,10 +88,10 @@ def init_users_db():
 @pytest.mark.parametrize(
     "user_id, book_id, expected_status, expected_ts",
     [
-        (1, 1, 200, "2025-07-02 10:23:54"),
-        (1, 2, 200, "2025-03-02 10:23:54"),
-        (2, 2, 200, "2025-06-02 10:23:54"),
-        (3, 1, 200, "2025-05-02 10:23:54"),
+        (1, 1, 200, "2025-07-02 10:23:54+03"),
+        (1, 2, 200, "2025-03-02 10:23:54+03"),
+        (2, 2, 200, "2025-06-02 10:23:54+03"),
+        (3, 1, 200, "2025-05-02 10:23:54+03"),
         (1, 4, 404, None),
         (4, 1, 404, None),
         (999, 1, 404, None),
