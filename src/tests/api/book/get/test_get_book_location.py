@@ -67,11 +67,11 @@ def init_book_extensions_db():
 @pytest.mark.parametrize(
     "book_id, extension_id, expected_result",
     [
-        (1, 1, "1.epub"),
-        (1, 2, "1.fb2"),
-        (2, 1, "2.epub"),
-        (2, 3, "2.pdf"),
-        (3, 2, "3.fb2"),
+        (1, 1, "/1.epub"),
+        (1, 2, "/1.fb2"),
+        (2, 1, "/2.epub"),
+        (2, 3, "/2.pdf"),
+        (3, 2, "/3.fb2"),
     ]
 )
 def test_get_book_extensions(book_id: int, extension_id: int, expected_result: str):
