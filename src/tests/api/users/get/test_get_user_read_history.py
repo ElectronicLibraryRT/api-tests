@@ -1,13 +1,42 @@
 import pytest
 import requests
 from src.core.models import User, Book, Genre, Extension, ReadHistory
-from src.core.session import session_maker
+from src.core.models.base import Base
+from src.core.session import session_maker, engine
 from src.settings import BACKEND_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
 def init_users_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with session_maker() as session:
+        genre1 = Genre(id=1, name="Детектив")
+        genre2 = Genre(id=2, name="Драма")
+        extension_fb2 = Extension(id=1, name="fb2")
+
+        book1 = Book(
+            id=1,
+            title="Преступление и наказание",
+            year_written=1866,
+            genres=[genre1],
+            extensions=[extension_fb2]
+        )
+        book2 = Book(
+            id=2,
+            title="Игрок",
+            year_written=1866,
+            genres=[genre2],
+            extensions=[extension_fb2]
+        )
+        book3 = Book(
+            id=3,
+            title="Анна Каренина",
+            year_written=1877,
+            genres=[genre2],
+            extensions=[extension_fb2]
+        )
+
         users = [
             User(
                 id=1,
@@ -15,33 +44,9 @@ def init_users_db():
                 salt="salt1",
                 password_hash="hash1",
                 refresh_token_uuid="uuid1",
-                read_books=[
-                    Book(
-                        id=1,
-                        title="Преступление и наказание",
-                        genre=[Genre(id=1, name="Детектив")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    ),
-                    Book(
-                        id=2,
-                        title="Игрок",
-                        genre=[Genre(id=1, name="Драма")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
                 read_history=[
-                    ReadHistory(
-                        user_id=1,
-                        book_id=1,
-                        last_read_ts="2025-07-02 10:23:54"
-                    ),
-                    ReadHistory(
-                        user_id=1,
-                        book_id=2,
-                        last_read_ts="2025-03-02 10:23:54"
-                    ),
+                    ReadHistory(book=book1, last_read_ts="2025-07-02 10:23:54"),
+                    ReadHistory(book=book2, last_read_ts="2025-03-02 10:23:54"),
                 ]
             ),
             User(
@@ -50,16 +55,9 @@ def init_users_db():
                 salt="salt2",
                 password_hash="hash2",
                 refresh_token_uuid="uuid2",
-                read_books=[
-                    Book(
-                        id=2,
-                        title="Игрок",
-                        genre=[Genre(id=1, name="Драма")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
-                read_history=[ReadHistory(user_id=2, book_id=2, last_read_ts="2025-06-02 10:23:54")]
+                read_history=[
+                    ReadHistory(book=book2, last_read_ts="2025-06-02 10:23:54")
+                ]
             ),
             User(
                 id=3,
@@ -67,16 +65,9 @@ def init_users_db():
                 salt="salt3",
                 password_hash="hash3",
                 refresh_token_uuid="uuid3",
-                read_books=[
-                    Book(
-                        id=1,
-                        title="Преступление и наказание",
-                        genre=[Genre(id=1, name="Детектив")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
-                read_history=[ReadHistory(user_id=3, book_id=1, last_read_ts="2025-05-02 10:23:54")]
+                read_history=[
+                    ReadHistory(book=book1, last_read_ts="2025-05-02 10:23:54")
+                ]
             ),
             User(
                 id=4,
@@ -84,20 +75,15 @@ def init_users_db():
                 salt="salt4",
                 password_hash="hash4",
                 refresh_token_uuid="uuid4",
-                read_books=[
-                    Book(
-                        id=3,
-                        title="Анна Каренина",
-                        genre=[Genre(id=3, name="Hjvfy")],
-                        year_written="1877",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
-                read_history=[ReadHistory(user_id=4, book_id=3, last_read_ts="2025-01-02 10:23:54")]
+                read_history=[
+                    ReadHistory(book=book3, last_read_ts="2025-01-02 10:23:54")
+                ]
             )
         ]
+
         session.add_all(users)
         session.commit()
+
 
 
 @pytest.mark.parametrize(
@@ -116,8 +102,8 @@ def test_get_user_read_history(user_id, expected_books: list[str], expected_ts: 
     assert response.status_code == 200
     data = response.json()
 
-    titles = [item["read_books"]["title"] for item in data]
+    titles = [item["book"]["title"] for item in data]
     assert titles == expected_books
 
-    time_stamps = [item["read_history"]["last_read_ts"] for item in data]
+    time_stamps = [item["last_read_ts"] for item in data]
     assert time_stamps == expected_ts

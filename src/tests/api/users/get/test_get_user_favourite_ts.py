@@ -1,13 +1,42 @@
 import pytest
 import requests
 from src.core.models import User, Book, Genre, Extension, FavouriteBook
-from src.core.session import session_maker
+from src.core.models.base import Base
+from src.core.session import session_maker, engine
 from src.settings import BACKEND_URL
 
 
 @pytest.fixture(scope="module", autouse=True)
 def init_users_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with session_maker() as session:
+        genre1 = Genre(id=1, name="Детектив")
+        genre2 = Genre(id=2, name="Драма")
+        extension_fb2 = Extension(id=1, name="fb2")
+
+        book1 = Book(
+            id=1,
+            title="Преступление и наказание",
+            year_written=1866,
+            genres=[genre1],
+            extensions=[extension_fb2]
+        )
+        book2 = Book(
+            id=2,
+            title="Игрок",
+            year_written=1866,
+            genres=[genre2],
+            extensions=[extension_fb2]
+        )
+        book3 = Book(
+            id=3,
+            title="Анна Каренина",
+            year_written=1877,
+            genres=[genre2],
+            extensions=[extension_fb2]
+        )
+
         users = [
             User(
                 id=1,
@@ -15,33 +44,9 @@ def init_users_db():
                 salt="salt1",
                 password_hash="hash1",
                 refresh_token_uuid="uuid1",
-                favourites=[
-                    Book(
-                        id=1,
-                        title="Преступление и наказание",
-                        genre=[Genre(id=1, name="Детектив")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    ),
-                    Book(
-                        id=2,
-                        title="Игрок",
-                        genre=[Genre(id=1, name="Драма")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
                 favourite_books=[
-                    FavouriteBook(
-                        user_id=1,
-                        book_id=1,
-                        added_ts="2025-07-02 10:23:54"
-                    ),
-                    FavouriteBook(
-                        user_id=1,
-                        book_id=2,
-                        added_ts="2025-03-02 10:23:54"
-                    ),
+                    FavouriteBook(book=book1, added_ts="2025-07-02 10:23:54"),
+                    FavouriteBook(book=book2, added_ts="2025-03-02 10:23:54"),
                 ]
             ),
             User(
@@ -50,16 +55,9 @@ def init_users_db():
                 salt="salt2",
                 password_hash="hash2",
                 refresh_token_uuid="uuid2",
-                favourites=[
-                    Book(
-                        id=2,
-                        title="Игрок",
-                        genre=[Genre(id=1, name="Драма")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
-                favourite_books=[FavouriteBook(user_id=2, book_id=2, added_ts="2025-06-02 10:23:54")]
+                favourite_books=[
+                    FavouriteBook(book=book2, added_ts="2025-06-02 10:23:54")
+                ]
             ),
             User(
                 id=3,
@@ -67,16 +65,9 @@ def init_users_db():
                 salt="salt3",
                 password_hash="hash3",
                 refresh_token_uuid="uuid3",
-                favourites=[
-                    Book(
-                        id=1,
-                        title="Преступление и наказание",
-                        genre=[Genre(id=1, name="Детектив")],
-                        year_written="1866",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
-                favourite_books=[FavouriteBook(user_id=3, book_id=1, added_ts="2025-05-02 10:23:54")]
+                favourite_books=[
+                    FavouriteBook(book=book1, added_ts="2025-05-02 10:23:54")
+                ]
             ),
             User(
                 id=4,
@@ -84,18 +75,12 @@ def init_users_db():
                 salt="salt4",
                 password_hash="hash4",
                 refresh_token_uuid="uuid4",
-                favourites=[
-                    Book(
-                        id=3,
-                        title="Анна Каренина",
-                        genre=[Genre(id=3, name="Hjvfy")],
-                        year_written="1877",
-                        extension=[Extension(id=1, name="fb2")]
-                    )
-                ],
-                favourite_books=[FavouriteBook(user_id=4, book_id=3, added_ts="2025-01-02 10:23:54")]
+                favourite_books=[
+                    FavouriteBook(book=book3, added_ts="2025-01-02 10:23:54")
+                ]
             )
         ]
+
         session.add_all(users)
         session.commit()
 
