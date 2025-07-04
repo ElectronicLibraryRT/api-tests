@@ -12,7 +12,7 @@ from src.settings import BACKEND_URL, MINIO_HOST, MINIO_PORT, MINIO_ROOT_USER, M
 FILES_DIR = os.path.join(os.path.dirname(__file__), 'files')
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="module")
 def minio_client_fixture():
     return boto3.client(
         's3',
