@@ -13,7 +13,7 @@ FILES_DIR = os.path.join(os.path.dirname(__file__), 'files')
 
 
 @ pytest.fixture(scope="module")
-def minio_client():
+def minio_client_fixture():
     return boto3.client(
         's3',
         endpoint_url=f'http://{MINIO_HOST}:{MINIO_PORT}',
@@ -113,16 +113,16 @@ def init_book_extensions_db():
         (4, 3, "4.epub"),
     ]
 )
-def test_get_book_extensions(book_id: int, extension_id: int, file_name: str, minio_client):
+def test_get_book_extensions(book_id: int, extension_id: int, file_name: str, minio_client_fixture):
     local_path = os.path.join(FILES_DIR, file_name)
 
     key = file_name
     try:
-        minio_client.head_object(Bucket=MINIO_BUCKET, Key=key)
-    except minio_client.exceptions.ClientError as e:
+        minio_client_fixture.head_object(Bucket=MINIO_BUCKET, Key=key)
+    except minio_client_fixture.exceptions.ClientError as e:
         if e.response['Error']['Code'] == '404':
             with open(local_path, 'rb') as data:
-                minio_client.put_object(Bucket=MINIO_BUCKET, Key=key, Body=data)
+                minio_client_fixture.put_object(Bucket=MINIO_BUCKET, Key=key, Body=data)
         else:
             raise
 
