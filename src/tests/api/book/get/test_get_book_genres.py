@@ -1,6 +1,6 @@
 import pytest
 import requests
-from src.core.models import Book, Author, Genre, Extension
+from src.core.models import Book, Author, Genre
 from src.core.models.base import Base
 from src.core.session import session_maker, engine
 from src.settings import BACKEND_URL
