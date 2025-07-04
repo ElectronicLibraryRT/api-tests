@@ -22,6 +22,10 @@ def minio_client():
         region_name='us-east-1'
     )
 
+    existing_buckets = client.list_buckets()
+    if MINIO_BUCKET not in [b['Name'] for b in existing_buckets.get('Buckets', [])]:
+        client.create_bucket(Bucket=MINIO_BUCKET)
+
     for file_name in os.listdir(FILES_DIR):
         local_path = os.path.join(FILES_DIR, file_name)
         if not os.path.isfile(local_path):
