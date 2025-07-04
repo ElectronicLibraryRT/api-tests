@@ -12,7 +12,7 @@ from src.settings import BACKEND_URL, MINIO_HOST, MINIO_PORT, MINIO_ROOT_USER, M
 FILES_DIR = os.path.join(os.path.dirname(__file__), 'files')
 
 
-@ pytest.fixture(scope="module")
+@pytest.fixture(scope="module", autouse=True)
 def minio_client_fixture():
     return boto3.client(
         's3',
@@ -22,6 +22,23 @@ def minio_client_fixture():
         config=Config(signature_version='s3v4'),
         region_name='us-east-1'
     )
+
+
+@pytest.fixture(scope="module", autouse=True)
+def upload_test_files(minio_client_fixture):
+    for file_name in os.listdir(FILES_DIR):
+        local_path = os.path.join(FILES_DIR, file_name)
+        if not os.path.isfile(local_path):
+            continue
+        key = file_name
+        try:
+            minio_client_fixture.head_object(Bucket=MINIO_BUCKET, Key=key)
+        except minio_client_fixture.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == '404':
+                with open(local_path, 'rb') as data:
+                    minio_client_fixture.put_object(Bucket=MINIO_BUCKET, Key=key, Body=data)
+            else:
+                raise
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -113,18 +130,8 @@ def init_book_extensions_db():
         (4, 3, "4.epub"),
     ]
 )
-def test_get_book_extensions(book_id: int, extension_id: int, file_name: str, minio_client_fixture):
+def test_get_book_extensions(book_id: int, extension_id: int, file_name: str):
     local_path = os.path.join(FILES_DIR, file_name)
-
-    key = file_name
-    try:
-        minio_client_fixture.head_object(Bucket=MINIO_BUCKET, Key=key)
-    except minio_client_fixture.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == '404':
-            with open(local_path, 'rb') as data:
-                minio_client_fixture.put_object(Bucket=MINIO_BUCKET, Key=key, Body=data)
-        else:
-            raise
 
     url = f"{BACKEND_URL}/books/{book_id}/extensions/{extension_id}"
     response = requests.get(url)
