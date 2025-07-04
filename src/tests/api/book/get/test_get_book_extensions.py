@@ -1,10 +1,10 @@
 import os
 import boto3
+from botocore.client import Config
 import pytest
 import requests
-from src.core.models import Book, Extension, BookLocation
 from src.core.models.base import Base
-from botocore.client import Config
+from src.core.models import Book, Extension, BookLocation
 from src.core.session import session_maker, engine
 from src.settings import BACKEND_URL, MINIO_HOST, MINIO_PORT, MINIO_ROOT_USER, MINIO_ROOT_PASSWORD, MINIO_BUCKET
 
