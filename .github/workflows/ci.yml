@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main, dev]
   push:
-    branches: [feature/**]
+    branches: [main, dev, feature/**]
   workflow_dispatch:
 
 
