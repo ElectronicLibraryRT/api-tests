@@ -39,6 +39,13 @@ def init_users_db():
                 salt="salt4",
                 password_hash="hash4",
                 refresh_token_uuid="uuid4"
+            ),
+            User(
+                id=5,
+                name="thomas",
+                salt="salt5",
+                password_hash="hash5",
+                refresh_token_uuid="uuid5"
             )
         ]
         session.add_all(users)
@@ -52,6 +59,7 @@ def init_users_db():
         (2, 200, "bob"),
         (3, 200, "charlie"),
         (4, 200, "diana"),
+        (5, 200, "thomas"),
         (999, 404, None),
     ]
 )
